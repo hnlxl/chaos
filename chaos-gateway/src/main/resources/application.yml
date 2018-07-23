@@ -1,0 +1,12 @@
+server:
+  port: 10003
+ribbon:
+  ReadTimeout: 60000
+  ConnectTimeout: 10000
+spring:
+  application:
+    name: chaos-gateway
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://registration-center.chaos.devlxl.xyz:10001/eureka/
