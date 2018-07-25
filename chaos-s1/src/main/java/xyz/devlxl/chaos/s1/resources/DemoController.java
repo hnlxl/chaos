@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -29,6 +30,7 @@ import lombok.experimental.Accessors;
 import lombok.extern.slf4j.Slf4j;
 import xyz.devlxl.chaos.base.properties.ChaosCloudProperties;
 import xyz.devlxl.chaos.base.properties.S1NettyServerProperties;
+import xyz.devlxl.chaos.s1.ApplicationContextProvider;
 
 /**
  * @author Liu Xiaolei
@@ -46,6 +48,8 @@ public class DemoController {
     private ChaosCloudProperties chaosCloudProperties;
     @Value("${spring.redis.database}")
     private Integer redisDatabaseNum;
+    @Autowired
+    private ApplicationContextProvider applicationContextProvider;
 
     @ApiOperation("Config Test")
     @ApiResponses({
@@ -56,7 +60,11 @@ public class DemoController {
         Map<String, Object> result = Maps.newHashMap();
         result.put("s1NettyServerProperties", s1NettyServerProperties);
         result.put("chaosCloudProperties", chaosCloudProperties);
-        result.put("redisDatabaseNum", redisDatabaseNum);
+        result.put("spring.redis.database", redisDatabaseNum);
+
+        Environment env = applicationContextProvider.getContext().getEnvironment();
+        result.put("spring.datasource.password", env.getProperty("spring.datasource.password"));
+        result.put("spring.redis.password", env.getProperty("spring.redis.password"));
         return result;
     }
 
