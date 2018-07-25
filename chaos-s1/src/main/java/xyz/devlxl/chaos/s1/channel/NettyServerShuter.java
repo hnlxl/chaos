@@ -1,6 +1,7 @@
 package xyz.devlxl.chaos.s1.channel;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 import io.netty.channel.nio.NioEventLoopGroup;
 import lombok.extern.slf4j.Slf4j;
@@ -10,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
  * @date 2018/03/26
  */
 @Slf4j
+@Component
 public class NettyServerShuter {
 
     public void shutDown(ApplicationContext appContext) {

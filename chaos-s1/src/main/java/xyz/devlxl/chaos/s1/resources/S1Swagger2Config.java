@@ -56,7 +56,7 @@ public class S1Swagger2Config {
             .produces(Sets.newHashSet("application/json"))
             .additionalModels(typeResolver.resolve(ErrorBody.class))
             .host(chaosCloudProperties.getGatewayHost())
-            .tags(new Tag("/demo1", "demo1"),
+            .tags(new Tag("/demo", "demo"),
                 new Tag("/demo2", "demo2"));
     }
 

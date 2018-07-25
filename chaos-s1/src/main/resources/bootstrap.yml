@@ -1,0 +1,15 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://registration-center.chaos.devlxl.xyz:10001/eureka/
+server:
+  port: 11001
+spring:
+  application:
+    name: chaos-s1
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: chaos-configserver
+      fail-fast: true
