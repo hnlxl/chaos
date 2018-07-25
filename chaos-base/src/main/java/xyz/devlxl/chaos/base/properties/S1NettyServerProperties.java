@@ -9,7 +9,7 @@ import lombok.Data;
  * @date 2018/03/26
  */
 @Data
-@ConfigurationProperties("s1-netty-server")
+@ConfigurationProperties("s1.netty-server")
 public class S1NettyServerProperties {
     /** 是否实际地启动，默认是，单元测试时需要关闭 */
     private boolean actuallyStarted = true;

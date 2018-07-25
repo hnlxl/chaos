@@ -45,7 +45,7 @@ public class ExampleCacheRepositoryAspect {
     private ExampleCacheRepository exampleCacheRepository;
 
     @Around("execution(public * xyz.devlxl.chaos.s1.domain.model.ExampleCacheRepository.findById(..))"
-        + "&& args(id)")
+        + "&& args(key)")
     public Optional<ExampleCache> aroundFindById(ProceedingJoinPoint pjp, String key) throws Throwable {
         @SuppressWarnings("unchecked")
         Optional<ExampleCache> retVal = (Optional<ExampleCache>)pjp.proceed();

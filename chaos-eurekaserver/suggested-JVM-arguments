@@ -1,0 +1,4 @@
+-Xms16m
+-Xmx48m
+-Xmn12m
+-Xss256k

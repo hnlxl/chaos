@@ -1,0 +1,37 @@
+logging:
+  path: target/logs
+server:
+  port: 10002
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://registration-center.chaos.devlxl.xyz:10001/eureka/
+spring:
+  application:
+    name: chaos-configserver
+  profiles:
+    # Local profile is only used for local development environment.
+    # It is always the last active local, means its properties has the highest priority.
+    # But, all of its configuration files are forbidden to push to master repository.
+    active:
+    - local
+  cloud:
+    config:
+      server:
+        git:
+          # When debugging or local testing, maybe need to use local repository and local branch. In order to do that,
+          # override this properties using local profile(started inside IDE) or application.properties/yml beside the
+          # packaged jar that will be executed. 
+          #
+          # Maybe set uri to local file repository such as file:///D:/Git/Repo/Chaos-group/chaos-config-repo.
+          #
+          # Maybe set default-label to "local". The "local" branch usually change some properties such as db properties.
+          # It will never be pushed. It is not recommended to merge "local" to "master", but if you want to, you must
+          # ensure the "local" always ahead 1 from "master"(by "commit --amend --date=now"), and always use 
+          # "git rebase" instead of "git merge" to execute merging. 
+          #
+          # Maybe set default-label to "temp". The "temp" branch is used for debugging when add/update properties.
+          # You can checkout to "temp" branch, add/update properties, commit, and debug. If debugging is completed,
+          # rebase to "master" branch and then delete "temp" branch.
+          uri: https://github.com/teclxl/chaos-config-repo.git
+          cloneOnStart: true

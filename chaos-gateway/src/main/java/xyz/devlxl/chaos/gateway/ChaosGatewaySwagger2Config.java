@@ -23,7 +23,7 @@ public class ChaosGatewaySwagger2Config {
         @Override
         public List<SwaggerResource> get() {
             List<SwaggerResource> resources = new ArrayList<>();
-            resources.add(swaggerResource("api by service one", "/chaos-serviceone/v2/api-docs", "0.0.1"));
+            resources.add(swaggerResource("api by service one", "/chaos-s1/v2/api-docs", "0.0.1"));
             return resources;
         }
 

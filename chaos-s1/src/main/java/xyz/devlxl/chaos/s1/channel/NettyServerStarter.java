@@ -3,6 +3,7 @@ package xyz.devlxl.chaos.s1.channel;
 import java.net.InetSocketAddress;
 
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -15,6 +16,7 @@ import xyz.devlxl.chaos.base.properties.S1NettyServerProperties;
  * @date 2018/03/26
  */
 @Slf4j
+@Component
 public class NettyServerStarter {
 
     public void startUp(ApplicationContext appContext) {
