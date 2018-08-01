@@ -28,8 +28,8 @@ public class ChaosS1Application {
 
     public static void main(String[] args) {
         new SpringApplicationBuilder(ChaosS1Application.class)
-            .listeners(new ContextRefreshedEventListener())
-            .listeners(new ContextClosedEventListener())
+            .listeners(new ApplicationStartedListener())
+            .listeners(new ApplicationShutedListener())
             .run(args);
     }
 
