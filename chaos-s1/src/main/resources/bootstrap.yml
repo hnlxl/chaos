@@ -13,3 +13,15 @@ spring:
         enabled: true
         service-id: chaos-configserver
       fail-fast: true
+    stream:
+      default:
+        group: chaos-s1
+      bindings:
+        person-input:
+          destination: person
+        person-output:
+          destination: person-upper
+        upper-person-input:
+          destination: person-upper
+        
+    
