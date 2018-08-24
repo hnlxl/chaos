@@ -1,0 +1,22 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>xyz.devlxl.chaos</groupId>
+		<artifactId>chaos-parent</artifactId>
+		<version>${revision}</version>
+		<relativePath>../chaos-parent</relativePath>
+	</parent>
+
+	<artifactId>chaos-supports</artifactId>
+	<packaging>pom</packaging>
+
+	<name>chaos-supports</name>
+	<description>可选支撑包项目组合，暂只负责组合，不负责父项目</description>
+
+	<modules>
+		<module>chaos-support-jpa</module>
+		<module>chaos-support-domain</module>
+	</modules>
+</project>

@@ -13,7 +13,7 @@
 		<!-- when package/install", it must add options "-DskipTests"，because the test of services need config server is online. -->
 		<module>chaos-parent</module>
 		<module>chaos-base</module>
-		<module>chaos-support-jpa</module>
+		<module>chaos-supports</module>
 		<module>chaos-eurekaserver</module>
 		<module>chaos-configserver</module>
 		<module>chaos-gateway</module>
