@@ -7,6 +7,7 @@ import lombok.Data;
 /**
  * @author Liu Xiaolei
  * @date 2018/03/26
+ * @TODO base项目重新打包回引起所有项目重新打包，因此只能定义公共配置项，不能定义单个服务专用的配置项，此类需要移动到具体服务中
  */
 @Data
 @ConfigurationProperties("s1.netty-server")

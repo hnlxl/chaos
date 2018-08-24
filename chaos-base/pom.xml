@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" 
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
@@ -17,25 +18,32 @@
 	<description>
 		基础项目，提供常量定义等系统全局基础。除父项目外，都可以依赖该项目。
 		该项目原则上不会依赖第三方包，但以下情况除外：
-			- 语言层面并且几乎已经成为通用标准的扩展包，例如lombok、google guava
-			- 几乎被所有项目使用，因为内容少又没必要独立成support项目的工具,产生的对第三方包的依赖，例如test工具和它依赖的spring-boot-starter-test
+			- Spring核心和Spring Boot核心。总是必选的。产品在总体上依赖Spring体系，不再考虑移植性。
+			- 语言层面并且几乎已经成为通用标准的扩展包，例如lombok、google guava。尽量是可选的。
+			- 几乎被所有项目使用，因为内容少又没必要独立成support项目的工具,产生的对第三方包的依赖，例如test工具和它依赖的spring-boot-starter-test。总是可选的。
 		The basic project that provides system global bases such as constant definition. Every project can depend on this project except for the parent project.
 		In principle, this project does not depend on third-party packages, except in the following cases:
-			- the extensions on Language-level, and have almost become common standards. Such as lombok, google guava
+			- Spring Core And Spring Boot Core. "Optional" must be "false". The product is generally dependent on the Spring system and no longer considers portability.
+			- The extensions on Language-level, and have almost become common standards. Such as lombok, google guava. "Optional" should be "true" as much as possible.
 			- The dependence on third-party packages produceed by the tools, that is almost used by all projects, and not need to become to support project because of little content.
-			  Such as the test tool and the spring-boot-starter-test it depends on.
+			  Such as the test tool and the spring-boot-starter-test it depends on. "Optional" must be "true".
 	</description>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
 		<dependency>
+			<!-- 仅供test工具使用，注意，它传播依赖了大量Spring框架的东西，其他地方要注意不能使用这些依赖 -->
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
