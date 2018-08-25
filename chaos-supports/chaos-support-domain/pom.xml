@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>xyz.devlxl.chaos</groupId>
+		<artifactId>chaos-parent</artifactId>
+		<version>${revision}</version>
+		<relativePath>../../chaos-parent</relativePath>
+	</parent>
+
+	<artifactId>chaos-support-domain</artifactId>
+	<packaging>jar</packaging>
+
+	<name>chaos-support-domain</name>
+	<description>关于领域的可选支撑包</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.data</groupId>
+			<artifactId>spring-data-commons</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>xyz.devlxl.chaos</groupId>
+			<artifactId>chaos-base</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>
