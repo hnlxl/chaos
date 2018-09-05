@@ -1,0 +1,89 @@
+@startuml 1
+box "application" #LightYellow
+    participant app as "Application Service And\nTranscation Manager"
+end box
+
+box "domain.model" #LightBlue
+    participant ar as "Aggregate Root"
+    participant repo as "Repository"
+end box
+box "Interceptor, aspect"  #Green
+    participant publish as "Publish Events Interceptor"
+end box
+box "Local subscriber" #LightGreen
+    participant localConsumer as "Local Consumer"
+end box
+
+
+[-> app
+app -> app: start transcation
+activate app
+    ==create or rebuild aggregate==
+    alt create 
+        create ar
+        app -> ar: new
+        ar --> app: new aggregate
+    else rebuild
+        app -> repo: find aggregate
+        activate repo
+            create ar
+            repo -> ar : rebuild
+            ar --> repo
+            repo --> app: rebuilded aggregate
+        deactivate repo
+    end
+    
+
+    ==business logic==
+    app -> ar : some business logic
+    activate ar
+        ar -> ar : logics & register events
+        ar --> app
+    deactivate ar
+
+    ==save aggregate==
+    note right app: This must be explicitly executed
+    app -> repo: save aggregate root
+    activate repo
+        repo -> repo: save
+        activate repo
+            repo -[#Blue]>> publish: trigger intercept
+            activate publish
+                publish -> ar: get events
+                ar --> publish
+                publish -> publish: publish events
+                activate publish
+                    loop every event
+                        opt having local consumer
+                            publish -[#0000AA]>> localConsumer: reserve async listener running after commit
+                            localConsumer -[#0000AA]->> publish
+                        end
+                    end loop
+                deactivate publish
+                publish -> ar: clear events
+                ar --> publish
+                publish -[#Blue]->> repo: end intercept
+            deactivate publish
+        deactivate repo
+        repo --> app
+    deactivate repo
+
+    app -> app: commit transcation
+    opt having local consumer
+        app -\\ localConsumer : notice commited
+        localConsumer -> localConsumer: run
+    end
+    
+    [<-- app
+deactivate app
+note left localConsumer
+    The local consumer must be transcational event listener, after commit, and async.
+    If follow these, publishing is always success, listener is always success but can 
+    only run when transcation is commited. So, if the work unit is success, the events
+    will be consumed, and otherwise, the events will not be consumed although they 
+    are be published.
+    Note, the consumer is async, so it is possible and allowed to be failure.
+end note
+
+
+@enduml

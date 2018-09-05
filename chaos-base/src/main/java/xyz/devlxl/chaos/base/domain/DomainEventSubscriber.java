@@ -4,6 +4,7 @@ package xyz.devlxl.chaos.base.domain;
  * @author Liu Xiaolei
  * @date 2018/07/21
  */
+@Deprecated
 public interface DomainEventSubscriber<T extends DomainEvent> {
 
     /**

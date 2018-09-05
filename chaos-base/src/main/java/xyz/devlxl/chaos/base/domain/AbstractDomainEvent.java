@@ -13,6 +13,7 @@ import lombok.ToString;
 @Getter
 @ToString()
 @EqualsAndHashCode()
+@Deprecated
 public abstract class AbstractDomainEvent implements DomainEvent {
     /** 事件发生时间 */
     protected Date occurredOn;
