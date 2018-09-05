@@ -1,5 +1,5 @@
 /**
- * 应用服务专区。 The special area about application services.
+ * 应用服务区。 The application services area.
  * 
  * @author Liu Xiaolei
  * @date 2018/07/23

@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Liu Xiaolei
  * @date 2018/07/21
  */
+@Deprecated
 public class DomainEventPublisher {
     private ConcurrentHashMap<Class<? extends DomainEvent>,
         List<DomainEventSubscriber<? extends DomainEvent>>> subscriberMap
