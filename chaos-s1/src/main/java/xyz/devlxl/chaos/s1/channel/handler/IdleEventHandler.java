@@ -8,8 +8,8 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 import io.netty.handler.timeout.IdleStateEvent;
 import lombok.extern.slf4j.Slf4j;
-import xyz.devlxl.chaos.base.domain.DomainEventPublisher;
-import xyz.devlxl.chaos.s1.domain.model.ToCloseChannelNecessary;
+import xyz.devlxl.chaos.s1.domain.model.ChannelCloseCommand;
+import xyz.devlxl.chaos.s1.domain.model.ChannelCloseCommandRepository;
 
 /**
  * 服务器端空闲事件处理器
@@ -26,7 +26,7 @@ import xyz.devlxl.chaos.s1.domain.model.ToCloseChannelNecessary;
 public class IdleEventHandler extends ChannelInboundHandlerAdapter {
 
     @Autowired
-    private DomainEventPublisher domainEventPublisher;
+    private ChannelCloseCommandRepository channelCloseCommandRepository;
 
     @Override
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
@@ -36,7 +36,7 @@ public class IdleEventHandler extends ChannelInboundHandlerAdapter {
             // 因此，此处要想额外判断是否还在线，必须同步等待客户端回复的心跳响应消息。
             // 这是一个pipeline上的处理器，主线程阻塞哪怕1秒都会严重影响并发量，异步线程又没必要，所以直接断开连接。
             log.info("Channel[" + ctx.channel().toString() + "] is idle, will be closed!");
-            domainEventPublisher.publish(new ToCloseChannelNecessary(ctx.channel()));
+            channelCloseCommandRepository.save(new ChannelCloseCommand(ctx.channel()).confirm());
         } else {
             super.userEventTriggered(ctx, evt);
         }

@@ -9,11 +9,11 @@ import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.extern.slf4j.Slf4j;
-import xyz.devlxl.chaos.base.domain.DomainEventPublisher;
 import xyz.devlxl.chaos.base.properties.S1NettyServerProperties;
 import xyz.devlxl.chaos.s1.base.pojo.InboundMessage;
 import xyz.devlxl.chaos.s1.base.pojo.InboundMessageAddition;
-import xyz.devlxl.chaos.s1.domain.model.ToCloseChannelNecessary;
+import xyz.devlxl.chaos.s1.domain.model.ChannelCloseCommand;
+import xyz.devlxl.chaos.s1.domain.model.ChannelCloseCommandRepository;
 
 /**
  * 
@@ -26,7 +26,7 @@ import xyz.devlxl.chaos.s1.domain.model.ToCloseChannelNecessary;
 public class InboundMessageHandler extends SimpleChannelInboundHandler<InboundMessage> {
 
     @Autowired
-    private DomainEventPublisher domainEventPublisher;
+    private ChannelCloseCommandRepository channelCloseCommandRepository;
 
     @Autowired
     private S1NettyServerProperties properties;
@@ -55,7 +55,7 @@ public class InboundMessageHandler extends SimpleChannelInboundHandler<InboundMe
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         // TODO
         log.error("", cause);
-        domainEventPublisher.publish(new ToCloseChannelNecessary(ctx.channel()));
+        channelCloseCommandRepository.save(new ChannelCloseCommand(ctx.channel()).confirm());
     }
 
 }
