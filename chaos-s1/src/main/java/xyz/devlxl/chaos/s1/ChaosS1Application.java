@@ -14,7 +14,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.web.client.RestTemplate;
 
-import xyz.devlxl.chaos.base.domain.DomainEventPublisher;
 import xyz.devlxl.chaos.base.properties.ChaosCloudProperties;
 import xyz.devlxl.chaos.base.properties.S1NettyServerProperties;
 import xyz.devlxl.chaos.s1.resources.S1Swagger2Config;
@@ -40,11 +39,6 @@ public class ChaosS1Application {
             .listeners(new ApplicationStartedListener())
             .listeners(new ApplicationShutedListener())
             .run(args);
-    }
-
-    @Bean
-    public DomainEventPublisher domainEventPublisher() {
-        return new DomainEventPublisher();
     }
 
     @Bean
