@@ -51,7 +51,7 @@ public class JpaStoredDomainEventHelper {
         }
 
         List<JpaStoredDomainEvent> fisterFilterEvents = jpaStoredDomainEventRepository
-            .findByClassNameIsAndOccurredOnBetween(
+            .findAllByClassNameIsAndOccurredOnBetween(
                 event.getClass().getName(),
                 event.occurredOn(),
                 new Date(event.occurredOn().getTime() + occurredOnAdjustment));
