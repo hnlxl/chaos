@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 import xyz.devlxl.chaos.support.domain.DomainEvent;
-import xyz.devlxl.chaos.support.jpa.domain.AbstractJpaDomainEvent;
+import xyz.devlxl.chaos.support.domainevents.AbstractJpaDomainEvent;
 
 /**
  * @author Liu Xiaolei

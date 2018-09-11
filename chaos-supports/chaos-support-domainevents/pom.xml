@@ -11,18 +11,13 @@
 		<relativePath>../../chaos-parent</relativePath>
 	</parent>
 
-	<artifactId>chaos-support-jpa</artifactId>
+	<artifactId>chaos-support-domainevents</artifactId>
 	<packaging>jar</packaging>
 
-	<name>chaos-support-jpa</name>
-	<description>关于JPA的可选支撑包</description>
+	<name>chaos-support-domainevents</name>
+	<description>领域事件的支撑包，包含事件存储、事件通知、事件订阅等的架构基础和技术实现</description>
 
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
-
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
@@ -33,11 +28,25 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
 
 		<dependency>
 			<groupId>xyz.devlxl.chaos</groupId>
-			<artifactId>chaos-base</artifactId>
+			<artifactId>chaos-support-jpa</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>xyz.devlxl.chaos</groupId>
+			<artifactId>chaos-support-domain</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
+
 	</dependencies>
 
 </project>

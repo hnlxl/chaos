@@ -32,8 +32,8 @@ import xyz.devlxl.chaos.s1.domain.model.publisheventdemo.StudentNameChanged;
 import xyz.devlxl.chaos.s1.domain.model.publisheventdemo.StudentNamerRereshed;
 import xyz.devlxl.chaos.s1.domain.model.publisheventdemo.StudentRepository;
 import xyz.devlxl.chaos.support.domain.DomainSupportException;
-import xyz.devlxl.chaos.support.jpa.domain.DomainEventJpaStoreListener;
-import xyz.devlxl.chaos.support.jpa.domain.JpaStoredDomainEventHelper;
+import xyz.devlxl.chaos.support.domainevents.store.DomainEventJpaStoreListener;
+import xyz.devlxl.chaos.support.domainevents.store.JpaStoredDomainEventHelper;
 
 /*
  * @formatter:off

@@ -17,19 +17,19 @@ import org.springframework.web.client.RestTemplate;
 import xyz.devlxl.chaos.base.properties.ChaosCloudProperties;
 import xyz.devlxl.chaos.base.properties.S1NettyServerProperties;
 import xyz.devlxl.chaos.s1.resources.S1Swagger2Config;
-import xyz.devlxl.chaos.support.jpa.JpaSupportConfiguration;
+import xyz.devlxl.chaos.support.domainevents.DomainEventsSupportConfiguration;
 
 /**
  * @author Liu Xiaolei
  * @date 2018/07/23
  */
 @SpringCloudApplication
-@ComponentScan(basePackageClasses = {ChaosS1Application.class, JpaSupportConfiguration.class})
+@ComponentScan(basePackageClasses = {ChaosS1Application.class, DomainEventsSupportConfiguration.class})
 @EnableFeignClients
 @EnableConfigurationProperties({S1NettyServerProperties.class, ChaosCloudProperties.class})
 @Import(S1Swagger2Config.class)
-@EntityScan(basePackageClasses = {ChaosS1Application.class, JpaSupportConfiguration.class})
-@EnableJpaRepositories(basePackageClasses = {ChaosS1Application.class, JpaSupportConfiguration.class})
+@EntityScan(basePackageClasses = {ChaosS1Application.class, DomainEventsSupportConfiguration.class})
+@EnableJpaRepositories(basePackageClasses = {ChaosS1Application.class, DomainEventsSupportConfiguration.class})
 @EnableJpaAuditing
 @EnableAsync
 public class ChaosS1Application {
