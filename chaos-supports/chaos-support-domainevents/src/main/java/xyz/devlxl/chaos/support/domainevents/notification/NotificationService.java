@@ -21,37 +21,32 @@ import xyz.devlxl.chaos.support.domainevents.store.JpaStoredDomainEventRepositor
 import xyz.devlxl.chaos.support.domainevents.store.JsonSerializationException;
 
 /**
- * The application service of stored domain event's notification
+ * The application service of the stored domain events's notification based on REST
  * 
  * @author Liu Xiaolei
  * @date 2018/09/06
  */
 @Service
-public class EventNotificationService {
+public class NotificationService {
     public static final int LOG_NOTIFICATION_COUNT = 20;
 
     @Setter(onMethod_ = @Autowired)
     private JpaStoredDomainEventRepository jpaStoredDomainEventRepository;
 
-    @Setter(onMethod_ = {@Qualifier("objectMapperOfJpaSupport"), @Autowired})
+    @Setter(onMethod_ = {@Qualifier("objectMapperOfDomainEventsSupport"), @Autowired})
     private ObjectMapper objectMapper;
 
     @Transactional(readOnly = true)
-    public EventNotificationLog currentNotificationLog() {
+    public NotificationLog currentNotificationLog() {
         return findNotificationLog(calculateCurrentNotificationLogId());
     }
 
     @Transactional(readOnly = true)
-    public EventNotificationLog eventNotificationLog(String notificationLogId) {
-        return findNotificationLog(EventNotificationLogId.from(notificationLogId));
+    public NotificationLog notificationLog(String notificationLogId) {
+        return findNotificationLog(NotificationLogId.from(notificationLogId));
     }
 
-    @Transactional
-    public void publishNotifications() {
-        // TODO
-    }
-
-    protected EventNotificationLogId calculateCurrentNotificationLogId() {
+    protected NotificationLogId calculateCurrentNotificationLogId() {
         // Using MAX instead of COUNT，so we don't have to ask for the ID to start from one and be continuous.
         long max = jpaStoredDomainEventRepository.maxId();
 
@@ -64,30 +59,30 @@ public class EventNotificationService {
         // 虽然当前有可能不存在一整套的通知，但是日志的id应该是暂新的
         long high = low + LOG_NOTIFICATION_COUNT - 1;
 
-        return new EventNotificationLogId(low, high);
+        return new NotificationLogId(low, high);
     }
 
-    protected EventNotificationLog findNotificationLog(EventNotificationLogId eventNotificationLogId) {
+    protected NotificationLog findNotificationLog(NotificationLogId notificationLogId) {
         List<JpaStoredDomainEvent> storedEvents
-            = jpaStoredDomainEventRepository.findAllByEventIdBetween(eventNotificationLogId.low(),
-                eventNotificationLogId.high(), Sort.by(Order.asc("eventId")));
-        List<EventNotification> notifications = notificationsFrom(storedEvents);
+            = jpaStoredDomainEventRepository.findAllByEventIdBetween(notificationLogId.low(),
+                notificationLogId.high(), Sort.by(Order.asc("eventId")));
+        List<Notification> notifications = notificationsFrom(storedEvents);
 
         long max = jpaStoredDomainEventRepository.maxId();
-        boolean archived = eventNotificationLogId.high() < max;
+        boolean archived = notificationLogId.high() < max;
 
         Optional<String> next = Optional.empty();
         if (archived) {
-            next = Optional.of(eventNotificationLogId.next().encoded());
+            next = Optional.of(notificationLogId.next().encoded());
         }
 
-        Optional<String> previous = eventNotificationLogId.previous()
+        Optional<String> previous = notificationLogId.previous()
             .map((previousId) -> {
                 return previousId.encoded();
             });
 
-        EventNotificationLog log = new EventNotificationLog()
-            .setSelf(eventNotificationLogId.encoded())
+        NotificationLog log = new NotificationLog()
+            .setSelf(notificationLogId.encoded())
             .setNext(next)
             .setPrevious(previous)
             .setNotifications(notifications)
@@ -96,8 +91,8 @@ public class EventNotificationService {
         return log;
     }
 
-    protected List<EventNotification> notificationsFrom(List<JpaStoredDomainEvent> storedEvents) {
-        List<EventNotification> notifications = new ArrayList<>(storedEvents.size());
+    protected List<Notification> notificationsFrom(List<JpaStoredDomainEvent> storedEvents) {
+        List<Notification> notifications = new ArrayList<>(storedEvents.size());
         for (JpaStoredDomainEvent storedEvent : storedEvents) {
             DomainEvent domainEvent = null;
             try {
@@ -108,7 +103,7 @@ public class EventNotificationService {
                 throw new JsonSerializationException(e);
             }
 
-            EventNotification notification = new EventNotification()
+            Notification notification = new Notification()
                 .setEvent(domainEvent)
                 .setEventOccureedOn(storedEvent.occurredOn())
                 .setEventId(storedEvent.eventId())

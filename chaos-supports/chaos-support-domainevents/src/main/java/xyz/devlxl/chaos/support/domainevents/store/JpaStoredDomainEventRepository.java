@@ -21,4 +21,6 @@ public interface JpaStoredDomainEventRepository extends JpaRepository<JpaStoredD
 
     @Query("SELECT max(eventId) FROM JpaStoredDomainEvent")
     public Long maxId();
+
+    public List<JpaStoredDomainEvent> findAllByEventIdGreaterThan(Long eventId, Sort sort);
 }

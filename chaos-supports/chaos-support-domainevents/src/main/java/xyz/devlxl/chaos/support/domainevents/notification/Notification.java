@@ -14,7 +14,7 @@ import xyz.devlxl.chaos.support.domain.DomainEvent;
  */
 @Data
 @Accessors(chain = true)
-public class EventNotification {
+public class Notification {
     private DomainEvent event;
     private Date eventOccureedOn;
     private Long eventId;

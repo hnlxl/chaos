@@ -17,17 +17,17 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode
 @ToString
 @Accessors(fluent = true)
-public class EventNotificationLogId {
+public class NotificationLogId {
     private final Long low;
     private final Long high;
     private final int count;
 
-    public static EventNotificationLogId from(String notificationLogIdText) {
+    public static NotificationLogId from(String notificationLogIdText) {
         String[] textIds = notificationLogIdText.split(",");
-        return new EventNotificationLogId(Long.parseLong(textIds[0]), Long.parseLong(textIds[1]));
+        return new NotificationLogId(Long.parseLong(textIds[0]), Long.parseLong(textIds[1]));
     }
 
-    public EventNotificationLogId(Long low, Long high) {
+    public NotificationLogId(Long low, Long high) {
         super();
         Assert.isTrue(low < high && low >= 0, "Thw LOW must be less than the HIGH and greater than zero!");
         this.low = low;
@@ -40,15 +40,15 @@ public class EventNotificationLogId {
         return "" + low + "," + high;
     }
 
-    public EventNotificationLogId next() {
-        return new EventNotificationLogId(low + count, high + count);
+    public NotificationLogId next() {
+        return new NotificationLogId(low + count, high + count);
     }
 
-    public Optional<EventNotificationLogId> previous() {
+    public Optional<NotificationLogId> previous() {
         if (low < count) {
             return Optional.empty();
         } else {
-            return Optional.of(new EventNotificationLogId(low - count, high - count));
+            return Optional.of(new NotificationLogId(low - count, high - count));
         }
     }
 }

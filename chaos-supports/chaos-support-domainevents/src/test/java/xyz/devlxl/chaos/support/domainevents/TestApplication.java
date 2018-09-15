@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @date 2018/09/07
  */
 @SpringBootApplication
-public class Application {
+// @SpringBootApplication(exclude = TestSupportBinderAutoConfiguration.class)
+public class TestApplication {
 
 }

@@ -17,8 +17,8 @@ public class DomainEventsSupportConfiguration {
     @Autowired
     private VerifyingDomainEventsPublishedInterceptor verifyingDomainEventsPublishedInterceptor;
 
-    @Bean("objectMapperOfJpaSupport")
-    public ObjectMapper objectMapperOfJpaSupport() {
+    @Bean("objectMapperOfDomainEventsSupport")
+    public ObjectMapper objectMapperOfDomainEventsSupport() {
         return new ObjectMapper();
     }
 

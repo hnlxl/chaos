@@ -14,10 +14,10 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class EventNotificationLog {
+public class NotificationLog {
     private String self;
     private Optional<String> next;
     private Optional<String> previous;
-    private List<EventNotification> notifications;
+    private List<Notification> notifications;
     private Boolean archived;
 }
