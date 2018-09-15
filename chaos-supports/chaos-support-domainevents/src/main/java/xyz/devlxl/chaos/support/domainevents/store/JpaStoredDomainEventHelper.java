@@ -24,7 +24,7 @@ public class JpaStoredDomainEventHelper {
     @Setter(onMethod_ = @Autowired)
     private JpaStoredDomainEventRepository jpaStoredDomainEventRepository;
 
-    @Setter(onMethod_ = {@Qualifier("objectMapperOfJpaSupport"), @Autowired})
+    @Setter(onMethod_ = {@Qualifier("objectMapperOfDomainEventsSupport"), @Autowired})
     private ObjectMapper objectMapper;
 
     protected String serializeEventBody(DomainEvent domainEvent) {
