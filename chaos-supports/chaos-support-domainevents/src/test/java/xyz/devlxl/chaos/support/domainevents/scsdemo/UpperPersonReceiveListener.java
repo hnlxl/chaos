@@ -1,4 +1,4 @@
-package xyz.devlxl.chaos.s1.application.subscriber.scsdemo;
+package xyz.devlxl.chaos.support.domainevents.scsdemo;
 
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.annotation.StreamListener;

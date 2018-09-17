@@ -1,4 +1,4 @@
-package xyz.devlxl.chaos.s1.application.subscriber.scsdemo;
+package xyz.devlxl.chaos.support.domainevents.scsdemo;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.Assert.assertThat;
