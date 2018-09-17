@@ -6,6 +6,7 @@ import java.util.stream.LongStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.binding.BinderAwareChannelResolver;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
@@ -29,6 +30,7 @@ import xyz.devlxl.chaos.support.domainevents.store.JpaStoredDomainEventRepositor
  */
 @Service
 @EnableConfigurationProperties(DeliveryProperties.class)
+@EnableBinding
 @Slf4j
 public class DeliveryService {
 
