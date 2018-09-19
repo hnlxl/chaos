@@ -1,10 +1,11 @@
-package xyz.devlxl.chaos.support.domainevents.delivery;
+package xyz.devlxl.chaos.support.domainevents.notification.delivery;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.LongStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.binding.BinderAwareChannelResolver;
@@ -16,14 +17,17 @@ import org.springframework.messaging.MessageChannel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import xyz.devlxl.chaos.support.domain.StoredDomainEvent;
+import xyz.devlxl.chaos.support.domainevents.notification.Notification;
 import xyz.devlxl.chaos.support.domainevents.store.JpaStoredDomainEvent;
 import xyz.devlxl.chaos.support.domainevents.store.JpaStoredDomainEventRepository;
 
 /**
- * The application service of the stored domain events's delivery
+ * The application service of the stored domain events's notification's delivery
  * 
  * @author Liu Xiaolei
  * @date 2018/09/11
@@ -45,6 +49,9 @@ public class DeliveryService {
 
     @Setter(onMethod_ = @Autowired)
     private BinderAwareChannelResolver binderAwareChannelResolver;
+
+    @Setter(onMethod_ = {@Qualifier("objectMapperOfDomainEventsSupport"), @Autowired})
+    private ObjectMapper objectMapper;
 
     @Transactional
     public void deliverUndelivered() {
@@ -84,13 +91,22 @@ public class DeliveryService {
     }
 
     protected boolean deliverAnStoredEvent(StoredDomainEvent event) {
-        Message<String> message = MessageBuilder.withPayload(event.eventBody())
-            .setHeader(deliveryProperties.getHeaderKey().getEventType(), event.className())
-            .setHeader(deliveryProperties.getHeaderKey().getEventId(), String.valueOf(event.eventId()))
-            .setHeader(deliveryProperties.getHeaderKey().getOccurredOn(), String.valueOf(event.occurredOn().getTime()))
+        Notification notification = Notification.fromStoredEvent(event);
+        String payload = null;
+        try {
+            payload = objectMapper.writeValueAsString(notification);
+        } catch (Exception e) {
+            log.warn("Exception occurs when serializing the notification of domain event!", e);
+            return false;
+        }
+        Message<String> message = MessageBuilder.withPayload(payload)
+            .setHeader(deliveryProperties.getHeaderKey().getEventType(), notification.getEventType())
+            .setHeader(deliveryProperties.getHeaderKey().getEventId(), String.valueOf(notification.getEventId()))
+            .setHeader(deliveryProperties.getHeaderKey().getOccurredOn(),
+                String.valueOf(notification.getOccurredOn().getTime()))
             .build();
         try {
-            return wrappingSend(binderAwareChannelResolver.resolveDestination(event.className()), message);
+            return wrappingSend(binderAwareChannelResolver.resolveDestination(notification.getEventType()), message);
         } catch (Exception e) {
             log.warn("Exception occurs when delivering the domain event!", e);
             return false;

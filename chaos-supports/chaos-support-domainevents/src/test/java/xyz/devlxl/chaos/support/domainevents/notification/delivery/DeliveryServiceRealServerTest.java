@@ -1,4 +1,4 @@
-package xyz.devlxl.chaos.support.domainevents.delivery;
+package xyz.devlxl.chaos.support.domainevents.notification.delivery;
 
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;

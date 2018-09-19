@@ -1,4 +1,4 @@
-package xyz.devlxl.chaos.support.domainevents.delivery;
+package xyz.devlxl.chaos.support.domainevents.notification.delivery;
 
 import org.springframework.cloud.stream.binding.BinderAwareChannelResolver;
 import org.springframework.context.annotation.Bean;
