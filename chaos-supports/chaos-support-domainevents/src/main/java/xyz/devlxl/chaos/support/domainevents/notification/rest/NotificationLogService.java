@@ -1,24 +1,18 @@
-package xyz.devlxl.chaos.support.domainevents.notification;
+package xyz.devlxl.chaos.support.domainevents.notification.rest;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import lombok.Setter;
-import xyz.devlxl.chaos.support.domain.DomainEvent;
+import xyz.devlxl.chaos.support.domainevents.notification.Notification;
 import xyz.devlxl.chaos.support.domainevents.store.JpaStoredDomainEvent;
 import xyz.devlxl.chaos.support.domainevents.store.JpaStoredDomainEventRepository;
-import xyz.devlxl.chaos.support.domainevents.store.JsonSerializationException;
 
 /**
  * The application service of the stored domain events's notification based on REST
@@ -27,14 +21,11 @@ import xyz.devlxl.chaos.support.domainevents.store.JsonSerializationException;
  * @date 2018/09/06
  */
 @Service
-public class NotificationService {
+public class NotificationLogService {
     public static final int LOG_NOTIFICATION_COUNT = 20;
 
     @Setter(onMethod_ = @Autowired)
     private JpaStoredDomainEventRepository jpaStoredDomainEventRepository;
-
-    @Setter(onMethod_ = {@Qualifier("objectMapperOfDomainEventsSupport"), @Autowired})
-    private ObjectMapper objectMapper;
 
     @Transactional(readOnly = true)
     public NotificationLog currentNotificationLog() {
@@ -66,7 +57,7 @@ public class NotificationService {
         List<JpaStoredDomainEvent> storedEvents
             = jpaStoredDomainEventRepository.findAllByEventIdBetween(notificationLogId.low(),
                 notificationLogId.high(), Sort.by(Order.asc("eventId")));
-        List<Notification> notifications = notificationsFrom(storedEvents);
+        List<Notification> notifications = Notification.listFromStoredEvent(storedEvents);
 
         long max = jpaStoredDomainEventRepository.maxId();
         boolean archived = notificationLogId.high() < max;
@@ -89,29 +80,5 @@ public class NotificationService {
             .setArchived(archived);
 
         return log;
-    }
-
-    protected List<Notification> notificationsFrom(List<JpaStoredDomainEvent> storedEvents) {
-        List<Notification> notifications = new ArrayList<>(storedEvents.size());
-        for (JpaStoredDomainEvent storedEvent : storedEvents) {
-            DomainEvent domainEvent = null;
-            try {
-                domainEvent = (DomainEvent)objectMapper.readValue(
-                    storedEvent.eventBody(),
-                    Class.forName(storedEvent.className()));
-            } catch (IOException | ClassNotFoundException e) {
-                throw new JsonSerializationException(e);
-            }
-
-            Notification notification = new Notification()
-                .setEvent(domainEvent)
-                .setEventOccureedOn(storedEvent.occurredOn())
-                .setEventId(storedEvent.eventId())
-                .setEventClassName(storedEvent.className());
-
-            notifications.add(notification);
-        }
-
-        return notifications;
     }
 }

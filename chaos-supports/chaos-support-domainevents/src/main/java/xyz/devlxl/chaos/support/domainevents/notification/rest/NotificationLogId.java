@@ -1,4 +1,4 @@
-package xyz.devlxl.chaos.support.domainevents.notification;
+package xyz.devlxl.chaos.support.domainevents.notification.rest;
 
 import java.util.Optional;
 

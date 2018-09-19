@@ -1,4 +1,4 @@
-package xyz.devlxl.chaos.support.domainevents.delivery;
+package xyz.devlxl.chaos.support.domainevents.notification.delivery;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

@@ -1,10 +1,11 @@
-package xyz.devlxl.chaos.support.domainevents.notification;
+package xyz.devlxl.chaos.support.domainevents.notification.rest;
 
-import static org.hamcrest.Matchers.instanceOf;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
+import java.io.IOException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,14 +23,15 @@ import lombok.ToString;
 import xyz.devlxl.chaos.base.test.BeforeAfterClassNonStatic;
 import xyz.devlxl.chaos.base.test.BeforeAfterClassNonStaticSpringRunner;
 import xyz.devlxl.chaos.support.domainevents.AbstractJpaDomainEvent;
+import xyz.devlxl.chaos.support.domainevents.notification.Notification;
 import xyz.devlxl.chaos.support.domainevents.store.JpaStoredDomainEvent;
 import xyz.devlxl.chaos.support.domainevents.store.JpaStoredDomainEventRepository;
 
 @RunWith(BeforeAfterClassNonStaticSpringRunner.class)
 @SpringBootTest
-public class NotificationServiceTest implements BeforeAfterClassNonStatic {
+public class NotificationLogServiceTest implements BeforeAfterClassNonStatic {
     @Autowired
-    private NotificationService service;
+    private NotificationLogService service;
     @Autowired
     private JpaStoredDomainEventRepository eventStoreRepo;
     @Autowired
@@ -69,9 +71,14 @@ public class NotificationServiceTest implements BeforeAfterClassNonStatic {
         for (int i = 0; i < ids.length; i++) {
             Notification notification = currentLog.getNotifications().get(i);
             assertTrue(notification.getEventId() == ids[i]);
-            assertEquals(notification.getEventClassName(), DummyEvent.class.getName());
-            assertThat(notification.getEvent(), instanceOf(DummyEvent.class));
-            assertEquals(((DummyEvent)notification.getEvent()).getDummyField(), "dummy" + ids[i] * 100);
+            assertEquals(notification.getEventType(), DummyEvent.class.getName());
+            DummyEvent event = null;
+            try {
+                event = objectMapper.readValue(notification.getEventBody(), DummyEvent.class);
+            } catch (IOException e) {
+                fail(e.toString());
+            }
+            assertEquals(event.getDummyField(), "dummy" + ids[i] * 100);
         }
         assertFalse(currentLog.getArchived());
     }
@@ -110,9 +117,14 @@ public class NotificationServiceTest implements BeforeAfterClassNonStatic {
         for (int i = 0; i < idsStarting.length; i++) {
             Notification notification = currentLog.getNotifications().get(i);
             assertTrue(notification.getEventId() == idsStarting[i]);
-            assertEquals(notification.getEventClassName(), DummyEvent.class.getName());
-            assertThat(notification.getEvent(), instanceOf(DummyEvent.class));
-            assertEquals(((DummyEvent)notification.getEvent()).getDummyField(), "dummy" + idsStarting[i] * 100);
+            assertEquals(notification.getEventType(), DummyEvent.class.getName());
+            DummyEvent event = null;
+            try {
+                event = objectMapper.readValue(notification.getEventBody(), DummyEvent.class);
+            } catch (IOException e) {
+                fail(e.toString());
+            }
+            assertEquals(event.getDummyField(), "dummy" + idsStarting[i] * 100);
         }
         assertTrue(currentLog.getArchived());
     }
@@ -128,9 +140,14 @@ public class NotificationServiceTest implements BeforeAfterClassNonStatic {
         for (int i = 0; i < idsStarting.length; i++) {
             Notification notification = currentLog.getNotifications().get(i);
             assertTrue(notification.getEventId() == idsStarting[i]);
-            assertEquals(notification.getEventClassName(), DummyEvent.class.getName());
-            assertThat(notification.getEvent(), instanceOf(DummyEvent.class));
-            assertEquals(((DummyEvent)notification.getEvent()).getDummyField(), "dummy" + idsStarting[i] * 100);
+            assertEquals(notification.getEventType(), DummyEvent.class.getName());
+            DummyEvent event = null;
+            try {
+                event = objectMapper.readValue(notification.getEventBody(), DummyEvent.class);
+            } catch (IOException e) {
+                fail(e.toString());
+            }
+            assertEquals(event.getDummyField(), "dummy" + idsStarting[i] * 100);
         }
         assertTrue(currentLog.getArchived());
     }
@@ -146,9 +163,14 @@ public class NotificationServiceTest implements BeforeAfterClassNonStatic {
         for (int i = 0; i < ids.length; i++) {
             Notification notification = currentLog.getNotifications().get(i);
             assertTrue(notification.getEventId() == ids[i]);
-            assertEquals(notification.getEventClassName(), DummyEvent.class.getName());
-            assertThat(notification.getEvent(), instanceOf(DummyEvent.class));
-            assertEquals(((DummyEvent)notification.getEvent()).getDummyField(), "dummy" + ids[i] * 100);
+            assertEquals(notification.getEventType(), DummyEvent.class.getName());
+            DummyEvent event = null;
+            try {
+                event = objectMapper.readValue(notification.getEventBody(), DummyEvent.class);
+            } catch (IOException e) {
+                fail(e.toString());
+            }
+            assertEquals(event.getDummyField(), "dummy" + ids[i] * 100);
         }
         assertFalse(currentLog.getArchived());
     }

@@ -1,10 +1,11 @@
-package xyz.devlxl.chaos.support.domainevents.notification;
+package xyz.devlxl.chaos.support.domainevents.notification.rest;
 
 import java.util.List;
 import java.util.Optional;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import xyz.devlxl.chaos.support.domainevents.notification.Notification;
 
 /**
  * A log of notification of domain event. It may be current or archived.
