@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
 /**
  * @author Liu Xiaolei
@@ -19,7 +20,10 @@ public class DomainEventsSupportConfiguration {
 
     @Bean("objectMapperOfDomainEventsSupport")
     public ObjectMapper objectMapperOfDomainEventsSupport() {
-        return new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+        objectMapper.setDateFormat(null);
+        return objectMapper;
     }
 
     @Bean

@@ -1,6 +1,8 @@
 package xyz.devlxl.chaos.support.domainevents.notification.delivery;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.LongStream;
 
@@ -27,7 +29,7 @@ import xyz.devlxl.chaos.support.domainevents.store.JpaStoredDomainEvent;
 import xyz.devlxl.chaos.support.domainevents.store.JpaStoredDomainEventRepository;
 
 /**
- * The application service of the stored domain events's notification's delivery
+ * The application service about delivering the notification of the stored domain events or the command domain event
  * 
  * @author Liu Xiaolei
  * @date 2018/09/11
@@ -54,7 +56,7 @@ public class DeliveryService {
     private ObjectMapper objectMapper;
 
     @Transactional
-    public void deliverUndelivered() {
+    public void deliverUndeliveredStroedEvent() {
         DeliveryTracker deliveryTracker = deliveryTracker();
         List<JpaStoredDomainEvent> undeliveredAndSortedEvents
             = listUndeliveredSmallToLarge(deliveryTracker.mostRecentDeliveredEventId());
@@ -71,6 +73,26 @@ public class DeliveryService {
 
         if (maxEventIdJustDelivered != null) {
             trackMostRecentDeliveredEvent(deliveryTracker, maxEventIdJustDelivered);
+        }
+    }
+
+    public boolean deliveryCommondEvent(String type, Map<String, Object> parameters, Date occurredOn,
+        Long notificationId) {
+        try {
+            Notification notification
+                = Notification.fromCommandOriginalInfo(type, parameters, occurredOn, notificationId);
+            Message<String> message = MessageBuilder.withPayload(objectMapper.writeValueAsString(notification))
+                .setHeader(deliveryProperties.getHeaderKey().getEventType(), notification.getTypeName())
+                .setHeader(deliveryProperties.getHeaderKey().getNotificationId(),
+                    String.valueOf(notification.getNotificationId()))
+                .setHeader(deliveryProperties.getHeaderKey().getOccurredOn(),
+                    String.valueOf(notification.getOccurredOn().getTime()))
+                .build();
+
+            return binderAwareChannelResolver.resolveDestination(notification.getTypeName()).send(message, 500);
+        } catch (Exception e) {
+            log.warn("Exception occurs when delivery a command notification!", e);
+            return false;
         }
     }
 
@@ -91,7 +113,7 @@ public class DeliveryService {
     }
 
     protected boolean deliverAnStoredEvent(StoredDomainEvent event) {
-        Notification notification = Notification.fromStoredEvent(event);
+        Notification notification = Notification.fromStoredEvent(objectMapper, event);
         String payload = null;
         try {
             payload = objectMapper.writeValueAsString(notification);
@@ -100,13 +122,14 @@ public class DeliveryService {
             return false;
         }
         Message<String> message = MessageBuilder.withPayload(payload)
-            .setHeader(deliveryProperties.getHeaderKey().getEventType(), notification.getEventType())
-            .setHeader(deliveryProperties.getHeaderKey().getEventId(), String.valueOf(notification.getEventId()))
+            .setHeader(deliveryProperties.getHeaderKey().getEventType(), notification.getTypeName())
+            .setHeader(deliveryProperties.getHeaderKey().getNotificationId(),
+                String.valueOf(notification.getNotificationId()))
             .setHeader(deliveryProperties.getHeaderKey().getOccurredOn(),
                 String.valueOf(notification.getOccurredOn().getTime()))
             .build();
         try {
-            return wrappingSend(binderAwareChannelResolver.resolveDestination(notification.getEventType()), message);
+            return wrappingSend(binderAwareChannelResolver.resolveDestination(notification.getTypeName()), message);
         } catch (Exception e) {
             log.warn("Exception occurs when delivering the domain event!", e);
             return false;
@@ -132,7 +155,8 @@ public class DeliveryService {
             if (this.mockSendOnlyIds.isPresent()) {
                 isMock = LongStream.of(this.mockSendOnlyIds.get()).anyMatch((oneIdToMock) -> {
                     return oneIdToMock == Long
-                        .parseLong(message.getHeaders().get(deliveryProperties.getHeaderKey().getEventId()).toString());
+                        .parseLong(
+                            message.getHeaders().get(deliveryProperties.getHeaderKey().getNotificationId()).toString());
                 });
             } else {
                 isMock = true;

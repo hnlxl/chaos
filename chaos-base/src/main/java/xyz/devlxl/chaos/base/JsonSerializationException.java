@@ -1,12 +1,10 @@
-package xyz.devlxl.chaos.support.domainevents.store;
-
-import xyz.devlxl.chaos.support.domain.DomainEventStoreException;
+package xyz.devlxl.chaos.base;
 
 /**
  * @author Liu Xiaolei
  * @date 2018/09/05
  */
-public class JsonSerializationException extends DomainEventStoreException {
+public class JsonSerializationException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
     public JsonSerializationException() {}
