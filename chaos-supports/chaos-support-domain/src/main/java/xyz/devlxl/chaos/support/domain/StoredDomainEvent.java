@@ -12,7 +12,7 @@ public interface StoredDomainEvent {
     /**
      * Returns the ID of this event.
      * <p>
-     * The consumers ignores the repeated sent mainly based on this value.
+     * The services related to event notifications, will use this value to issue or deliver a notification in order.
      * 
      * @return ID of this event
      */
@@ -21,7 +21,7 @@ public interface StoredDomainEvent {
     /**
      * Returns the body of this event that has been serialized into JSON.
      * <p>
-     * The consumers rebuilds the event object mainly based on this value.
+     * The rebuilding of the event object mainly based on this value.
      * 
      * @return JSON
      */
@@ -37,7 +37,7 @@ public interface StoredDomainEvent {
     /**
      * Returns the class name of this event.
      * <p>
-     * This value can help consumers to rebuild objects and quickly distribute events to handlers
+     * This value can help rebuilding of the event object or quickly distribute events to handlers
      * 
      * @return class name
      */

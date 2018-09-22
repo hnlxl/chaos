@@ -16,7 +16,7 @@ public class DeliveryProperties {
     @Data
     public static class HeaderKey {
         private String eventType = "etype";
-        private String eventId = "eid";
+        private String notificationId = "nid";
         private String occurredOn = "eon";
     }
 }

@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Setter;
 import xyz.devlxl.chaos.support.domainevents.notification.Notification;
@@ -26,6 +29,8 @@ public class NotificationLogService {
 
     @Setter(onMethod_ = @Autowired)
     private JpaStoredDomainEventRepository jpaStoredDomainEventRepository;
+    @Setter(onMethod_ = {@Qualifier("objectMapperOfDomainEventsSupport"), @Autowired})
+    private ObjectMapper objectMapper;
 
     @Transactional(readOnly = true)
     public NotificationLog currentNotificationLog() {
@@ -57,7 +62,7 @@ public class NotificationLogService {
         List<JpaStoredDomainEvent> storedEvents
             = jpaStoredDomainEventRepository.findAllByEventIdBetween(notificationLogId.low(),
                 notificationLogId.high(), Sort.by(Order.asc("eventId")));
-        List<Notification> notifications = Notification.listFromStoredEvent(storedEvents);
+        List<Notification> notifications = Notification.listFromStoredEvent(objectMapper, storedEvents);
 
         long max = jpaStoredDomainEventRepository.maxId();
         boolean archived = notificationLogId.high() < max;

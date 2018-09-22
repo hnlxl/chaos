@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.Setter;
 import xyz.devlxl.chaos.support.domain.DomainEvent;
+import xyz.devlxl.chaos.support.domain.DomainEventStoreException;
 
 /**
  * @author Liu Xiaolei
@@ -31,7 +32,7 @@ public class JpaStoredDomainEventHelper {
         try {
             return objectMapper.writeValueAsString(domainEvent);
         } catch (JsonProcessingException e) {
-            throw new JsonSerializationException(e);
+            throw new DomainEventStoreException(e);
         }
     }
 
@@ -60,7 +61,7 @@ public class JpaStoredDomainEventHelper {
             try {
                 deserializedEvent = objectMapper.readValue(storedEvent.eventBody(), event.getClass());
             } catch (IOException e) {
-                throw new JsonSerializationException(e);
+                throw new DomainEventStoreException(e);
             }
             if (deserializedEvent.equalsExcludedOccurTime(event)) {
                 return true;
